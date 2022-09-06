@@ -1,5 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Ropa+Sans&display=swap');
+
 * {
     box-sizing: border-box;
-    transition: 0.5s;
-
+    font-family: 'Ropa Sans', sans-serif;
 }

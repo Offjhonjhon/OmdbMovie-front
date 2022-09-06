@@ -1,26 +1,30 @@
 import styled from 'styled-components';
-import { useState, useEffect, useContext } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import api from '../services/api.js';
 import MoviePoster from '../Components/MoviePoster.js';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 
 
-
 function Movies() {
     const [movies, setMovies] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const movie = useParams().movie;
     const page = useParams().page;
-    const [disable, setDisable] = useState(false);
+    const [totalMovies, setTotalMovies] = useState(0);
+    const [disableLeft, setDisableLeft] = useState(false);
+    const [disableRight, setDisableRight] = useState(false);
+    const totalPages = Math.ceil(totalMovies / 10);
+
+
 
 
     useEffect(() => {
-        setIsLoading(true);
         axios.get(api.moviesUrl + 's=' + movie + '&page=' + page)
             .then(response => {
                 setMovies(response.data.Search);
+                setTotalMovies(response.data.totalResults);
                 setIsLoading(false);
             })
             .catch(error => {
@@ -28,10 +32,14 @@ function Movies() {
                 setIsLoading(false);
             })
 
-        page === "1" ? setDisable(true) : setDisable(false);
+        page === "1" ? setDisableLeft(true) : setDisableLeft(false);
+        page === totalPages ? setDisableRight(true) : setDisableRight(false);
+        console.log(disableRight)
+        console.log(page)
+        console.log(totalPages)
     }, [movie, page]);
 
-    if (movies === undefined) {
+    if (movies === undefined || movies.length === 0) {
         return (
             <MoviesContainer>
                 <h1>Procurar</h1>
@@ -42,23 +50,30 @@ function Movies() {
     return (
         <MoviesContainer>
             <MoviesPosters>
-                {movies.map(poster => {
-                    console.log(isLoading)
+                {movies.map(movie => {
+
                     return (
-                        <MoviePoster key={poster.imdbID} isLoading={isLoading} movie={poster} />
+                        <MoviePoster key={movie.imdbID} movie={movie} isLoading={isLoading} />
                     )
                 })}
             </MoviesPosters>
 
             <MoviesNavigation>
-                <LeftArrow disable={disable} color={disable ? '#000' : "#fff"} onClick={
-                    () => {
-                        window.location.href = '/movies/' + movie + '/' + (+page - 1);
+                <LeftArrow color={disableLeft ? '#000' : "#fff"} onClick={
+                    (e) => {
+                        if (!disableLeft) {
+                            e.preventDefault();
+                            window.location.href = '/movies/' + movie + '/' + (+page - 1);
+                        }
                     }
                 } />
-                <RightArrow onClick={
-                    () => {
-                        window.location.href = '/movies/' + movie + '/' + (+page + 1);
+                <Pages>{`${page}/${totalPages}`}</Pages>
+                <RightArrow color={disableRight ? '#000' : "#fff"} onClick={
+                    (e) => {
+                        if (!disableRight) {
+                            e.preventDefault();
+                            window.location.href = '/movies/' + movie + '/' + (+page + 1);
+                        }
                     }
                 } />
             </MoviesNavigation>
@@ -72,7 +87,7 @@ export default Movies;
 
 const MoviesContainer = styled.div`
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100vw;
@@ -82,20 +97,18 @@ const MoviesContainer = styled.div`
 `
 
 const MoviesPosters = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px,150px));
-    width: 60vw;
+    display: flex;
+    flex-wrap: wrap;
     margin-top: 150px;
+    width: 60vw;
     gap: 30px;
     justify-content: center;
-    margin-bottom: 100px;
     @media (max-width: 900px) {
         width: 100vw;
     }
 `
 
 const MoviesNavigation = styled.div`
-    position: absolute;
     display: flex;
     justify-content: space-between;
     width: 60vw;
@@ -103,6 +116,7 @@ const MoviesNavigation = styled.div`
     gap: 30px;
     justify-content: center;
     margin-bottom: 30px;
+    margin-top: 20px;
     @media (max-width: 768px) {
         width: 100vw;
     }
@@ -119,12 +133,16 @@ const LeftArrow = styled(AiOutlineArrowLeft)`
 `
 
 const RightArrow = styled(AiOutlineArrowRight)`
-    color: #fff;
+    color: ${props => props.color};
     font-size: 1.5rem;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     &:hover {
         transform: scale(1.5);
     }
+`
+
+const Pages = styled.div`
+    color: #fff;
 `
 

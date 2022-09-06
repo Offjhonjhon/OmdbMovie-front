@@ -3,13 +3,16 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { useState } from 'react';
 import api from "../services/api";
+import logo from '../assets/logo.png'
+import CustomizedSnackbars from "../Components/Errors/error.js";
+import ThreeDotsLoader from "../Components/Loader/ThreeDotsLoader.js";
+
 
 function Signup() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [image, setImage] = useState('');
     const [name, setName] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -18,17 +21,16 @@ function Signup() {
     const SignUp = {
         email: email,
         password: password,
-        name: name,
-        image: image
+        name: name
     };
 
     function verify() {
-        if (!email || !password || !confirmPassword || !name || !image) {
+        if (!email || !password || !confirmPassword || !name) {
             setError('All fields are required');
             return false;
         }
-        if (password.length < 10) {
-            setError('Password must be at least 10 characters long');
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters long');
             return false;
         }
         if (password !== confirmPassword) {
@@ -40,6 +42,7 @@ function Signup() {
 
     async function sendRequest(e) {
         e.preventDefault();
+        console.log(error)
 
         if (verify()) {
             setLoading(true);
@@ -66,59 +69,110 @@ function Signup() {
     }
 
     return (
-        <SignupPage>
+        <>
             <SignupForm onSubmit={sendRequest}>
-                <Input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-                <Input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-                <Input type="password" placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} />
-                <Input type="text" placeholder="Name" onChange={(e) => setName(e.target.value)} />
-                <Input type="text" placeholder="Image" onChange={(e) => setImage(e.target.value)} />
-                <Button type="submit" disabled={loading}>{loading ? 'Loading...' : 'Sign Up'}</Button>
-                <p>{error}</p>
-                <p>{success ? 'Successfully signed up!' : ''}</p>
-                <p>Already have an account? <Link to="/">Sign In</Link></p>
+                <Logo src={logo}></Logo>
+                <Label HTMLFor='email'>Endereço de e-mail</Label>
+                <Input type="email" name="email" onChange={(e) => setEmail(e.target.value)} />
+                <Label HTMLFor='password'>Senha (pelo menos 6 caracteres)</Label>
+                <Input type="password" name="password" onChange={(e) => setPassword(e.target.value)} />
+                <Label HTMLFor='confirmPassword'>Confirmar senha</Label>
+                <Input type="password" name="confirmPassword" onChange={(e) => setConfirmPassword(e.target.value)} />
+                <Label HTMLFor='userName'>Nome de usuário</Label>
+                <Input type="text" name="userName" onChange={(e) => setName(e.target.value)} />
+                <Button type="submit" disabled={loading}>{loading ? <ThreeDotsLoader size='30px' /> : 'Sign Up'}</Button>
+                {error ? <CustomizedSnackbars error={error} /> : <></>}
+                <p><StyledLink to="/">Already have an account?</StyledLink></p>
             </SignupForm>
-        </SignupPage>
+        </>
     )
 }
 
 export default Signup;
 
-const SignupPage = styled.div`
-    display: flex;
-`;
-
 const SignupForm = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100vw;
-    background-color: black;
-    color: white;
+    width: 892px;
+    height: 634px;
+    background-color: #FFF;
+    border-radius: 15px;
+
+    @media screen and (max-width: 767px){
+        width: 300px;
+    }
 `;
 
 const Input = styled.input`
-    width: 200px;
-    height: 30px;
-    border: 1px solid white;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    color: white;
-    background-color: black;
-    font-size: 15px;
-    padding-left: 10px;
+    width: 40%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #978D8D;
+    font-size: 16px;
+    background-color: #fff;
+    transition: 0.5s;
+    &:focus {
+        outline: none;
+        border: 1px solid #000;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+    &::placeholder,
+    ::-webkit-input-placeholder {
+        background-color: #fff;
+    }
+
+    @media screen and (max-width: 767px){
+        width: 85%;
+    }
 `;
 
 const Button = styled.button`
-    width: 200px;
+    width: 100px;
     height: 30px;
-    border: 1px solid white;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    color: white;
-    background-color: black;
+    border-radius: 15px;
+    border: none;
     font-size: 15px;
-    padding-left: 10px;
+    color: #fff;
+    margin-top: 15px;
+    margin-bottom: 30px;
+    background-color: #1976d2;
+    &:hover {
+        transition: 0.8s;
+        background-color: #0A3F75;
+        cursor: pointer;
+    } 
+
+    &:focus {
+        outline: none;
+    }
 `;
+const Logo = styled.img`
+    width: 192px;
+    height: 192px;
+`
+const Label = styled.label`
+    @import url('https://fonts.googleapis.com/css2?family=Ropa+Sans&display=swap');
+
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 15px;
+    width: 40%;
+    margin-bottom: 10px;
+    margin-top: 15px;
+    
+    @media screen and (max-width: 767px){
+        width: 85%;
+    }
+`
+
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    color: #C3C9CE;
+    font-size: 20px;
+
+    &:hover {
+        transition: 0.8s;
+        color: #3F4952;
+    }
+`

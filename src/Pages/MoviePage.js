@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import api from '../services/api.js';
 import axios from 'axios';
 
+
 import imdbLogo from "../assets/imdbLogo.png";
 
 
@@ -11,13 +12,13 @@ function MoviePage() {
     const { imdbID } = useParams();
     const [movie, setMovie] = useState();
     const [loading, setLoading] = useState(false);
+    console.log(movie)
 
     useEffect(() => {
         setLoading(true);
         axios.get(api.moviesUrl + 'i=' + imdbID)
             .then(response => {
                 console.log(response.data);
-
                 setMovie(response.data);
             })
             .catch(error => {
@@ -34,6 +35,7 @@ function MoviePage() {
         return (
             <MoviePageContainer>
                 <MoviePageLoading>
+
                 </MoviePageLoading>
             </MoviePageContainer>
         )
@@ -114,7 +116,7 @@ const MoviePageLoading = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: red;
+    background-color: black;
 `
 const Title = styled.h1`
     margin-top: 50px;

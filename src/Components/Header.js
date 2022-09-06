@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useContext } from 'react';
 import SearchContext from '../Context/searchContext.js';
 import { BiSearch } from 'react-icons/bi';
+import { AiFillHome } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 
 const image = localStorage.getItem('image');
@@ -14,14 +15,13 @@ function Header() {
     const [display, setDisplay] = useState("flex");
 
     useEffect(() => {
-        (location.pathname === '/' || location.pathname === '/cadastro' || location.pathname === "/movie")
+        (window.location.pathname === '/' || window.location.pathname === '/signup' || window.location.pathname === "/movie")
             ? setDisplay('none')
             : setDisplay('flex');
     }, [location.pathname]);
 
 
     function handleKeyDown(e) {
-
         if (e.key === 'Enter') {
             e.preventDefault();
             setSearch(!search);
@@ -30,9 +30,16 @@ function Header() {
         }
     }
 
+    function handleSearchClick() {
+        setSearch(!search);
+        setPage(1);
+        navigate(`/movies/${movie}/1`);
+    }
+
     return (
         <HeaderContainer display={display}>
             <Search>
+                <HomeButton onClick={() => navigate('/home')} />
                 <SearchInput
                     type="text"
                     placeholder="Search"
@@ -41,13 +48,7 @@ function Header() {
                     onChange={(e) => setMovie(e.target.value)}
                 >
                 </SearchInput>
-                <SearchButton onClick={
-                    () => {
-                        setSearch(!search);
-                        setPage(1);
-                        navigate(`/movies/${movie}/1`);
-                    }
-                } />
+                <SearchButton onClick={handleSearchClick} />
             </Search>
 
             <Profile src={image} />
@@ -102,6 +103,12 @@ const SearchButton = styled(BiSearch)`
     &:focus {
         outline: none;
     }
+`
+const HomeButton = styled(AiFillHome)`
+    font-size: 20px;
+    margin-right: 30px;
+    color: black;
+    cursor: pointer;
 `
 
 

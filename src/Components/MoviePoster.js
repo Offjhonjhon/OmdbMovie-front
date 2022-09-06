@@ -1,17 +1,23 @@
 import styled from 'styled-components';
-import { Rings } from 'react-loader-spinner';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useLoading, Puff } from '@agney/react-loading';
 
-function MoviePoster(poster, isLoading) {
+function MoviePoster({ movie, isLoading }) {
+    const { containerProps, indicatorEl } = useLoading({
+        loading: isLoading,
+        indicator: <Puff width="50" />,
+    });
 
     return (
-        <Link to={`/movie/${poster.movie.imdbID}`}>
+        <Link to={`/movie/${movie.imdbID}`}>
             <MoviePosterContainer>
-                <Poster src={poster.movie.Poster} alt={poster.Title} />
+                <Poster src={movie.Poster} />
             </MoviePosterContainer>
         </Link>
+
     )
+
 }
 
 export default MoviePoster;
@@ -21,8 +27,6 @@ const Poster = styled.img`
     height: 240px;
     object-fit: cover;
     border-radius: 5px;
-    
-    
 `;
 
 const MoviePosterContainer = styled.div`
@@ -34,40 +38,7 @@ const MoviePosterContainer = styled.div`
     height: 240px;
     object-fit: cover;
     border-radius: 5px;
+    background-color: white;
 `;
 
-const MoviePosterImage = styled.img`
-    width: 165px;
-    height: 240px;
-    object-fit: cover;
-    border-radius: 5px;
-    cursor: pointer;
-`;
 
-const MoviePosterLoading = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 165px;
-    height: 240px;
-    object-fit: cover;
-    border-radius: 5px;
-    cursor: pointer;
-`;
-
-const MoviePosterLoadingSpinner = styled.div`
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #ccc;
-    animation: spin 1s linear infinite;
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-`;
