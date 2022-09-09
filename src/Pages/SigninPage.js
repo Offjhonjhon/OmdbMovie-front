@@ -17,6 +17,8 @@ function Signin() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
+    console.log(process.env.BASE_MODE)
+    console.log(api.dbUrl)
     const Login = {
         email: email,
         password: password
