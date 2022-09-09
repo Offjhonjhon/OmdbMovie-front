@@ -17,9 +17,6 @@ function Movies() {
     const [disableRight, setDisableRight] = useState(false);
     const totalPages = Math.ceil(totalMovies / 10);
 
-
-
-
     useEffect(() => {
         axios.get(api.moviesUrl + 's=' + movie + '&page=' + page)
             .then(response => {
@@ -49,6 +46,13 @@ function Movies() {
 
     return (
         <MoviesContainer>
+            <Genres>
+                <Type>ALL</Type>
+                <Type>MOVIES</Type>
+                <Type>SERIES</Type>
+                <Type>GAMES</Type>
+            </Genres>
+            <PageTittle>SEARCH RESULTS</PageTittle>
             <MoviesPosters>
                 {movies.map(movie => {
 
@@ -88,24 +92,26 @@ export default Movies;
 const MoviesContainer = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    background-color: black;
-    overflow: scroll;
+    padding-top: 100px;
+ 
 `
 
 const MoviesPosters = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 150px;
-    width: 60vw;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     gap: 30px;
-    justify-content: center;
-    @media (max-width: 900px) {
-        width: 100vw;
+    margin-top: 50px;
+
+    @media (max-width: 1000px) {
+        grid-template-columns: repeat(3, 1fr);
     }
+
+    @media (max-width: 700px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-left: 15px;
+    }
+
 `
 
 const MoviesNavigation = styled.div`
@@ -144,5 +150,29 @@ const RightArrow = styled(AiOutlineArrowRight)`
 
 const Pages = styled.div`
     color: #fff;
+`
+const Genres = styled.div`
+    display: flex;
+    justify-content: space-around;
+`
+const Type = styled.span`
+    @import url('https://fonts.googleapis.com/css2?family=Ropa+Sans&display=swap');
+
+    font-family: 'Ropa Sans', sans-serif;
+    font-size: 20px;
+    color: #FFF;
+`
+const PageTittle = styled.h1`
+    @import url('https://fonts.googleapis.com/css2?family=Ropa+Sans&display=swap');
+
+    font-family: 'Ropa Sans', sans-serif;
+    font-size: 35px;
+    color: #FFF;
+    margin-top: 50px;
+    margin-left: -100px;
+
+    @media (max-width: 700px) {
+        margin-left: 10px;
+    }
 `
 

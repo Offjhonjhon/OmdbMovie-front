@@ -5,7 +5,7 @@ import api from '../services/api.js';
 import axios from 'axios';
 
 
-import imdbLogo from "../assets/imdbLogo.png";
+import imdbLogo from "../assets/IMDbLogo.png";
 
 
 function MoviePage() {
@@ -46,6 +46,7 @@ function MoviePage() {
     return (
         <MoviePageContainer>
             <MoviePageInfo>
+                <MovieInfo>{`${movie.Runtime} ● ${movie.Year} ●  `}<RatedIcon>{movie.Rated}</RatedIcon></MovieInfo>
                 <Title>{movie.Title}</Title>
                 <Imdb>
                     <ImdbLogo src={imdbLogo} />
@@ -86,15 +87,15 @@ function MoviePage() {
 export default MoviePage;
 
 const MoviePageContainer = styled.div`
+    @import url('https://fonts.googleapis.com/css2?family=Ropa+Sans&display=swap');
+    font-family: 'Ropa Sans', sans-serif;
     display: flex;
     justify-content: center;
-    font-family: 'Roboto', sans-serif;
     padding-top: 100px;
     display: flex;
     flex-direction: row;
     width: 100vw;
     height: 100vh;
-    background-color: black;
 
     @media (max-width: 600px) { 
         flex-direction: column;
@@ -108,6 +109,8 @@ const Poster = styled.img`
     border-radius: 10px;
     margin-left: 40px;
     margin-top: 55px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    
 `
 
 const MoviePageLoading = styled.div`
@@ -151,7 +154,6 @@ const BoxTittle = styled.h1`
 `
 const ImdbLogo = styled.img`
     width: 40px;
-    height: 20px;
 `
 const MoviePageCastInformation = styled.div`
     display: flex;
@@ -169,3 +171,23 @@ const MovieGenre = styled.div`
 `
 const MovieDirector = styled.div`
 `
+const MovieInfo = styled.div`
+    display: flex;
+    font-family: 'Roboto', sans-serif;
+    color: #7B8C98;
+    font-size: 18px;
+    
+`
+const RatedIcon = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: #404254;
+    width: 49px;
+    height: 18px;
+    background-color: #7B8C98;
+    font-size: 14px;
+    margin-left: 7px;
+`
+

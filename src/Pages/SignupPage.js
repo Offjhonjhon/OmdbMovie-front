@@ -72,13 +72,13 @@ function Signup() {
         <>
             <SignupForm onSubmit={sendRequest}>
                 <Logo src={logo}></Logo>
-                <Label HTMLFor='email'>Endereço de e-mail</Label>
+                <Label HTMLFor='email'>Email address</Label>
                 <Input type="email" name="email" onChange={(e) => setEmail(e.target.value)} />
-                <Label HTMLFor='password'>Senha (pelo menos 6 caracteres)</Label>
+                <Label HTMLFor='password'>Password (at least 6 characters)</Label>
                 <Input type="password" name="password" onChange={(e) => setPassword(e.target.value)} />
-                <Label HTMLFor='confirmPassword'>Confirmar senha</Label>
+                <Label HTMLFor='confirmPassword'>Confirm password</Label>
                 <Input type="password" name="confirmPassword" onChange={(e) => setConfirmPassword(e.target.value)} />
-                <Label HTMLFor='userName'>Nome de usuário</Label>
+                <Label HTMLFor='userName'>User name</Label>
                 <Input type="text" name="userName" onChange={(e) => setName(e.target.value)} />
                 <Button type="submit" disabled={loading}>{loading ? <ThreeDotsLoader size='30px' /> : 'Sign Up'}</Button>
                 {error ? <CustomizedSnackbars error={error} /> : <></>}
@@ -94,18 +94,21 @@ const SignupForm = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 892px;
+    width: 700px;
     height: 634px;
     background-color: #FFF;
     border-radius: 15px;
-
+    margin: auto;
+    
     @media screen and (max-width: 767px){
         width: 300px;
     }
+
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 `;
 
 const Input = styled.input`
-    width: 40%;
+    width: 60%;
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #978D8D;
@@ -134,7 +137,7 @@ const Button = styled.button`
     border: none;
     font-size: 15px;
     color: #fff;
-    margin-top: 15px;
+    margin-top: 25px;
     margin-bottom: 30px;
     background-color: #1976d2;
     &:hover {
@@ -157,7 +160,7 @@ const Label = styled.label`
     font-family: 'Inter', sans-serif;
     font-size: 15px;
     line-height: 15px;
-    width: 40%;
+    width: 60%;
     margin-bottom: 10px;
     margin-top: 15px;
     
