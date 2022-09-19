@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import api from '../services/api.js';
 import axios from 'axios';
 
-
 import imdbLogo from "../assets/IMDbLogo.png";
 
 

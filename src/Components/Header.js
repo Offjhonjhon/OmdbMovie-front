@@ -7,7 +7,6 @@ import { AiFillHome, AiFillHeart } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 import logo from '../assets/logo2.png'
 
-const image = localStorage.getItem('image');
 
 function Header() {
     const { movie, setMovie, setSearch, search, setPage } = useContext(SearchContext);

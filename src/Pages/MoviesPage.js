@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import SearchContext from '../Context/searchContext.js';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import api from '../services/api.js';
@@ -8,58 +9,62 @@ import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 
 
 function Movies() {
+    const {setPage} = useContext(SearchContext);
     const [movies, setMovies] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const movie = useParams().movie;
-    const page = useParams().page;
+    const [loading, setLoading] = useState(true);
     const [totalMovies, setTotalMovies] = useState(0);
     const [disableLeft, setDisableLeft] = useState(false);
     const [disableRight, setDisableRight] = useState(false);
+    const [type, setType] = useState('');
+    const movie = useParams().movie;
+    const page = useParams().page;
+    
     const totalPages = Math.ceil(totalMovies / 10);
 
+    console.log(movies)
+
+
     useEffect(() => {
-        axios.get(api.moviesUrl + 's=' + movie + '&page=' + page)
+        setLoading(true);
+        axios.get(api.moviesUrl + 's=' + movie + '&type=' + type + '&page=' + page)
             .then(response => {
                 setMovies(response.data.Search);
                 setTotalMovies(response.data.totalResults);
-                setIsLoading(false);
+                setLoading(false);
             })
             .catch(error => {
                 console.log(error);
-                setIsLoading(false);
+                setLoading(false);
             })
 
         page === "1" ? setDisableLeft(true) : setDisableLeft(false);
         page === totalPages ? setDisableRight(true) : setDisableRight(false);
-        console.log(disableRight)
-        console.log(page)
-        console.log(totalPages)
-    }, [movie, page]);
-
-    if (movies === undefined || movies.length === 0) {
-        return (
-            <MoviesContainer>
-                <h1>Procurar</h1>
-            </MoviesContainer>
-        )
+    }, [movie, page, type]);
+  
+    function handleSectionChange(type) {
+        setType(type);
     }
 
     return (
         <MoviesContainer>
             <Genres>
-                <Type>ALL</Type>
-                <Type>MOVIES</Type>
-                <Type>SERIES</Type>
-                <Type>GAMES</Type>
+                <Type onClick={() => handleSectionChange('')} color={type === '' ? "#000" : "#FFF" }>ALL</Type>
+                <Type onClick={() => handleSectionChange('movie')} color={type === 'movie' ? "#000" : "#FFF" }>MOVIES</Type>
+                <Type onClick={() => handleSectionChange('series')} color={type === 'series' ? "#000" : "#FFF" }>SERIES</Type>
+                <Type onClick={() => handleSectionChange('game')} color={type === 'game' ? "#000" : "#FFF" }>GAMES</Type>
             </Genres>
             <PageTittle>SEARCH RESULTS</PageTittle>
             <MoviesPosters>
-                {movies.map(movie => {
+                {  movies ? (
+                    movies.map(movie => {
+                        return (
+                            <MoviePoster key={movie.imdbID} movie={movie} isLoading={loading} />
+                        )
+                    })
+                    ) 
+                    : ( <PageTittle>NO RESULTS FOUND</PageTittle>)
 
-                    return (
-                        <MoviePoster key={movie.imdbID} movie={movie} isLoading={isLoading} />
-                    )
-                })}
+                }
             </MoviesPosters>
 
             <MoviesNavigation>
@@ -160,6 +165,14 @@ const Type = styled.span`
 
     font-family: 'Ropa Sans', sans-serif;
     font-size: 20px;
+    color: ${props => props.color};
+    cursor: pointer;
+`
+const NotFound = styled.span`
+    @import url('https://fonts.googleapis.com/css2?family=Ropa+Sans&display=swap');
+
+    font-family: 'Ropa Sans', sans-serif;
+    font-size: 40px;
     color: #FFF;
 `
 const PageTittle = styled.h1`
