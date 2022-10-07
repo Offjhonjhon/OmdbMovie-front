@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useState, useEffect, useContext } from 'react';
-import SearchContext from '../Context/searchContext.js';
+import PageContext from '../Context/pageContext.js';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import api from '../services/api.js';
@@ -8,8 +8,8 @@ import MoviePoster from '../Components/MoviePoster.js';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 
 
+
 function Movies() {
-    const {setPage} = useContext(SearchContext);
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [totalMovies, setTotalMovies] = useState(0);
@@ -20,9 +20,6 @@ function Movies() {
     const page = useParams().page;
     
     const totalPages = Math.ceil(totalMovies / 10);
-
-    console.log(movies)
-
 
     useEffect(() => {
         setLoading(true);
@@ -47,27 +44,29 @@ function Movies() {
 
     return (
         <MoviesContainer>
-            <Genres>
+            <Genres display={(loading || !movies) ? 'none' : 'flex'}>
                 <Type onClick={() => handleSectionChange('')} color={type === '' ? "#000" : "#FFF" }>ALL</Type>
                 <Type onClick={() => handleSectionChange('movie')} color={type === 'movie' ? "#000" : "#FFF" }>MOVIES</Type>
                 <Type onClick={() => handleSectionChange('series')} color={type === 'series' ? "#000" : "#FFF" }>SERIES</Type>
                 <Type onClick={() => handleSectionChange('game')} color={type === 'game' ? "#000" : "#FFF" }>GAMES</Type>
             </Genres>
-            <PageTittle>SEARCH RESULTS</PageTittle>
+            <PageTittle display={(loading || !movies) ? 'none' : 'block'}>SEARCH RESULTS</PageTittle>
             <MoviesPosters>
-                {  movies ? (
+                {  (movies && !loading) ? (
                     movies.map(movie => {
                         return (
                             <MoviePoster key={movie.imdbID} movie={movie} isLoading={loading} />
                         )
                     })
                     ) 
-                    : ( <PageTittle>NO RESULTS FOUND</PageTittle>)
+                    : (!movies && !loading) 
+                        ? (<NotFound>NO RESULTS FOUND</NotFound>) 
+                        : (<></>)
 
                 }
             </MoviesPosters>
 
-            <MoviesNavigation>
+            <MoviesNavigation visibility={(loading || !movies) ? 'hidden' : 'visible'}>
                 <LeftArrow color={disableLeft ? '#000' : "#fff"} onClick={
                     (e) => {
                         if (!disableLeft) {
@@ -121,6 +120,8 @@ const MoviesPosters = styled.div`
 
 const MoviesNavigation = styled.div`
     display: flex;
+    visibility: ${props => props.visibility};
+    transition: 0.5s;
     justify-content: space-between;
     width: 60vw;
     bottom: 0px;
@@ -157,7 +158,7 @@ const Pages = styled.div`
     color: #fff;
 `
 const Genres = styled.div`
-    display: flex;
+    display: ${props => props.display};
     justify-content: space-around;
 `
 const Type = styled.span`
@@ -170,7 +171,8 @@ const Type = styled.span`
 `
 const NotFound = styled.span`
     @import url('https://fonts.googleapis.com/css2?family=Ropa+Sans&display=swap');
-
+    width: 100vw;
+    text-align: center;
     font-family: 'Ropa Sans', sans-serif;
     font-size: 40px;
     color: #FFF;
@@ -178,6 +180,7 @@ const NotFound = styled.span`
 const PageTittle = styled.h1`
     @import url('https://fonts.googleapis.com/css2?family=Ropa+Sans&display=swap');
 
+    display: ${props => props.display};
     font-family: 'Ropa Sans', sans-serif;
     font-size: 35px;
     color: #FFF;

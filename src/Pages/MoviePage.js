@@ -3,15 +3,14 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../services/api.js';
 import axios from 'axios';
-
 import imdbLogo from "../assets/IMDbLogo.png";
-
+import metacriticLogo from "../assets/metacritic.png";
+import rottenTomatoesLogo from "../assets/rottenTomatoes.png";
 
 function MoviePage() {
     const { imdbID } = useParams();
     const [movie, setMovie] = useState();
     const [loading, setLoading] = useState(false);
-    console.log(movie)
 
     useEffect(() => {
         setLoading(true);
@@ -30,7 +29,7 @@ function MoviePage() {
     }, [])
 
 
-    if (!movie) {
+    if (loading || !movie) {
         return (
             <MoviePageContainer>
                 <MoviePageLoading>
@@ -40,16 +39,20 @@ function MoviePage() {
         )
     }
 
-    console.log(movie.Actors.split(', '));
-
     return (
-        <MoviePageContainer>
+        <MoviePageContainer >
             <MoviePageInfo>
                 <MovieInfo>{`${movie.Runtime} ● ${movie.Year} ●  `}<RatedIcon>{movie.Rated}</RatedIcon></MovieInfo>
                 <Title>{movie.Title}</Title>
-                <Imdb>
+                <Critics>
                     <ImdbLogo src={imdbLogo} />
-                    {movie.Ratings[0].Value}</Imdb>
+                    {movie.Ratings[0].Value}
+                    <ImdbLogo src={rottenTomatoesLogo} />
+                    {movie.Ratings[2].Value}
+                    <ImdbLogo src={metacriticLogo} />
+                    {movie.Ratings[1].Value}
+                </Critics>
+                
                 <MovieDescription>
                     <BoxTittle>Synopsis</BoxTittle>
                     {movie.Plot}
@@ -90,26 +93,24 @@ const MoviePageContainer = styled.div`
     font-family: 'Ropa Sans', sans-serif;
     display: flex;
     justify-content: center;
-    padding-top: 100px;
+    padding-top: 150px;
     display: flex;
     flex-direction: row;
     width: 100vw;
     height: 100vh;
-
     @media (max-width: 600px) { 
         flex-direction: column;
     }
 `
 
 const Poster = styled.img`
-    width: 288px;
-    height: 432px;
+    width: 396px;
+    height: 577px;
     display: block;
     border-radius: 10px;
     margin-left: 40px;
     margin-top: 55px;
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-    
 `
 
 const MoviePageLoading = styled.div`
@@ -118,19 +119,19 @@ const MoviePageLoading = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: black;
 `
 const Title = styled.h1`
     margin-top: 50px;
-    font-size: 2.5rem;
-    font-weight: bold;
+    font-size: 70px;
     color: #fff;
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 50px;
+    text-align: start;
+    width: 575px;
 `
 const MoviePageInfo = styled.div`
 `
-const Imdb = styled.div`
+const Critics = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -140,20 +141,31 @@ const Imdb = styled.div`
     width: 90px;
     border: 1px solid #fff;
     border-radius: 5px;
+    margin-bottom: 50px;
 `
 const MovieDescription = styled.div`
     margin-top: 20px;
-    font-size: 1rem;
+    font-size: 30px;
     color: #fff;
     width: 400px;
+    width: 575px;
+    
 `
 const BoxTittle = styled.h1`
-    font-size: 20px;
-    color : #f5f5f5 ;
+    font-size: 30px;
+    color : #7B8C98 ;
+    margin-bottom: 10px;
 `
 const ImdbLogo = styled.img`
     width: 40px;
 `
+const MetacriticLogo = styled.img`
+
+`;
+
+const RottenLogo = styled.img`
+`;
+
 const MoviePageCastInformation = styled.div`
     display: flex;
     flex-direction: row;
@@ -162,13 +174,19 @@ const MoviePageCastInformation = styled.div`
 `
 
 const MovieCast = styled.div`
+    gap: 5px;
+    font-size: 30px;
 `
 const Item = styled.p`
     color: #fff;
 `
 const MovieGenre = styled.div`
+    font-size: 30px;
+
 `
 const MovieDirector = styled.div`
+    font-size: 30px;
+
 `
 const MovieInfo = styled.div`
     display: flex;
@@ -189,4 +207,3 @@ const RatedIcon = styled.div`
     font-size: 14px;
     margin-left: 7px;
 `
-

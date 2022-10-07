@@ -1,16 +1,11 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {useNavigate} from 'react-router';
-import { useLoading, Puff } from '@agney/react-loading';
 import { AiFillHeart } from 'react-icons/ai';
 
 function MoviePoster({ movie, isLoading }) {
     const [favorited, setFavorited] = useState(false)
     let navigate = useNavigate();
-    const { containerProps, indicatorEl } = useLoading({
-        loading: isLoading,
-        indicator: <Puff width="50" />,
-    });
 
     function handleClick() {
         navigate(`/movie/${movie.imdbID}`)

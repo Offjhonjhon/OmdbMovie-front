@@ -1,6 +1,4 @@
-import { Children } from 'react/cjs/react.production.min';
 import styled from 'styled-components';
-
 
 const Background = ({children}) => {
   return (

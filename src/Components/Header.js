@@ -6,10 +6,14 @@ import { BiSearch } from 'react-icons/bi';
 import { AiFillHome, AiFillHeart } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 import logo from '../assets/logo2.png'
+import MovieContext from '../Context/movieContext.js';
+import PageContext from '../Context/pageContext.js';
 
 
 function Header() {
-    const { movie, setMovie, setSearch, search, setPage } = useContext(SearchContext);
+    const {setSearch, search} = useContext(SearchContext);
+    const {movie, setMovie} = useContext(MovieContext);
+    const {setPage} = useContext(PageContext);
     const navigate = useNavigate();
     const location = useLocation();
     const [display, setDisplay] = useState("flex");
